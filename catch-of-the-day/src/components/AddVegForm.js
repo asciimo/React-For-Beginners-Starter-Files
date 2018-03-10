@@ -17,7 +17,9 @@ class AddVegForm extends React.Component{
       desc: this.descRef.value.value,
       image: this.imageRef.value.value
     };
-    console.log(veg);
+    this.props.addVeg(veg);
+    // Reset form
+    event.currentTarget.reset();
 
   };
 
