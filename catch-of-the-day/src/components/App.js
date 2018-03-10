@@ -4,6 +4,16 @@ import Inventory from './Inventory';
 import Order from './Order';
 
 class App extends React.Component {
+
+  state = {
+    vegs: {},
+    order: {}
+  };
+
+  addVeg = (veg) => {
+    console.log('Adding a veg.');
+  };
+
   render() {
 	  return (
       <div className="veg-of-the-day">
@@ -11,7 +21,7 @@ class App extends React.Component {
           <Header tagline="Fresh Vegetable Market" />
         </div>
         <Order />
-        <Inventory />
+        <Inventory addVeg={this.addVeg} />
       </div>
     )
   }
