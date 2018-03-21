@@ -1,12 +1,11 @@
-import React from 'react';
-import Header from './Header';
-import Inventory from './Inventory';
-import Order from './Order';
-import SampleData from '../sample-data';
-import Veg from './Veg';
-import base from '../base'
+import React from "react";
+import Header from "./Header";
+import Inventory from "./Inventory";
+import Order from "./Order";
+import SampleData from "../sample-data";
+import Veg from "./Veg";
+import base from "../base";
 class App extends React.Component {
-
   state = {
     vegs: {},
     order: {}
@@ -18,34 +17,38 @@ class App extends React.Component {
 
     this.ref = base.syncState(`${storeId}/vegs`, {
       context: this,
-      state: 'vegs'
+      state: "vegs"
     });
 
     if (localStorageRef) {
-      this.setState({ order: JSON.parse(localStorageRef)});
+      this.setState({ order: JSON.parse(localStorageRef) });
     }
-
   }
   componentDidUpdate() {
     const storeId = this.props.match.params.storeId;
     console.log(this.state.order);
     localStorage.setItem(storeId, JSON.stringify(this.state.order));
-
   }
 
   componentWillUnmount() {
     base.removeBinding(this.ref);
   }
 
-addVeg = (veg) => {
+  addVeg = veg => {
     const vegs = { ...this.state.vegs };
     vegs[`veg${Date.now()}`] = veg;
     this.setState({ vegs });
   };
 
+  updateVeg = (key, updatedVeg) => {
+    const vegs = { ...this.state.vegs };
+    vegs[key] = updatedVeg;
+    this.setState({ vegs });
+  };
+
   loadSampleData = () => {
     this.setState({ vegs: SampleData });
-  }
+  };
 
   addToOrder = key => {
     // take a copy of state.
@@ -54,7 +57,7 @@ addVeg = (veg) => {
     order[key] = order[key] + 1 || 1;
     // call setState to update our state object
     this.setState({ order });
-};
+  };
 
   render() {
     return (
@@ -62,22 +65,26 @@ addVeg = (veg) => {
         <div className="menu">
           <Header tagline="Fresh Vegetable Market" />
           <ul className="vegs">
-            {Object.keys(this.state.vegs).map(
-              key => <Veg
+            {Object.keys(this.state.vegs).map(key => (
+              <Veg
                 key={key}
                 details={this.state.vegs[key]}
                 index={key}
                 addToOrder={this.addToOrder}
-              />)
-            }
+              />
+            ))}
           </ul>
         </div>
         <Order vegs={this.state.vegs} order={this.state.order} />
-        <Inventory addVeg={this.addVeg} vegs={this.state.vegs} loadSampleData={this.loadSampleData} />
+        <Inventory
+          addVeg={this.addVeg}
+          vegs={this.state.vegs}
+          loadSampleData={this.loadSampleData}
+          updateVeg={this.updateVeg}
+        />
       </div>
-    )
+    );
   }
-
 }
 
 export default App;
